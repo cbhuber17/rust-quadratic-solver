@@ -8,6 +8,11 @@ fn main() {
     }
     let b: f32 = get_input("b".to_string());
     let c: f32 = get_input("c".to_string());
+
+    let (root1, root2) = solve_quadratic(a, b, c);
+
+    println!("Root1: {:.2}", root1);
+    println!("Root2: {:.2}", root2);
 }
 
 // ------------------------------------------------------------------------------
@@ -31,4 +36,13 @@ fn check_number(num_str: &String) -> f32 {
             process::exit(1)
         }
     }
+}
+
+// ------------------------------------------------------------------------------
+
+fn solve_quadratic(a: f32, b: f32, c: f32) -> (f32, f32) {
+    // TODO: Check square root of negative number
+    let root1: f32 = (-1.0 * b + (b * b - 4.0 * a * c).sqrt()) / (2.0 * a);
+    let root2: f32 = (-1.0 * b - (b * b - 4.0 * a * c).sqrt()) / (2.0 * a);
+    (root1, root2)
 }
