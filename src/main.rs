@@ -41,8 +41,19 @@ fn check_number(num_str: &String) -> f32 {
 // ------------------------------------------------------------------------------
 
 fn solve_quadratic(a: f32, b: f32, c: f32) -> (f32, f32) {
-    // TODO: Check square root of negative number
-    let root1: f32 = (-1.0 * b + (b * b - 4.0 * a * c).sqrt()) / (2.0 * a);
-    let root2: f32 = (-1.0 * b - (b * b - 4.0 * a * c).sqrt()) / (2.0 * a);
+    // TODO: Imaginary numbers if d < 0 ?
+
+    let d = b * b - 4.0 * a * c;
+
+    if d < 0.0 {
+        println!(
+            "\nError:\na: {}\nb: {}\nc: {}\ndoes not have real roots.",
+            a, b, c
+        );
+        process::exit(1);
+    }
+
+    let root1: f32 = (-1.0 * b + d.sqrt()) / (2.0 * a);
+    let root2: f32 = (-1.0 * b - d.sqrt()) / (2.0 * a);
     (root1, root2)
 }
