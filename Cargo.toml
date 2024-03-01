@@ -5,4 +5,11 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[dev-dependencies]
+criterion = { version = "0.3", features = ["html_reports"] }
+
+[[bench]]
+name = "quadratic_bench"
+harness = false          # Disable built in harness; let criterion do the work
+
 [dependencies]
