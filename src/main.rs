@@ -1,22 +1,30 @@
-// TODO: Argparse a, b, c
-
-// mod utils;
-use rust_quadratic_solver::input::get_input;
 use rust_quadratic_solver::quadratic::solve_quadratic;
+use structopt::StructOpt;
 
-fn main() {
-    let a: f32 = get_input("a".to_string());
-    if a == 0.0 {
-        println!("Error: 'a' cannot be zero.");
-        panic!();
-    }
-    let b: f32 = get_input("b".to_string());
-    let c: f32 = get_input("c".to_string());
+// ------------------------------------------------------------------------------
 
-    let (root1, root2) = solve_quadratic(a, b, c);
+#[derive(Debug, StructOpt)]
+#[structopt(about = "Quadratic Equation Solver")]
+#[structopt(global_setting = structopt::clap::AppSettings::AllowNegativeNumbers)]
+struct Opt {
+    #[structopt(short = "a", required = true)]
+    a: f32,
 
-    println!("Root1: {:.4}", root1);
-    println!("Root2: {:.4}", root2);
+    #[structopt(short = "b", required = true)]
+    b: f32,
+
+    #[structopt(short = "c", required = true)]
+    c: f32,
 }
 
 // ------------------------------------------------------------------------------
+
+fn main() {
+    let opt = Opt::from_args();
+
+    let (root1, root2) = solve_quadratic(opt.a, opt.b, opt.c);
+
+    // TODO: Print results to a file
+    println!("Root1: {:.4}", root1);
+    println!("Root2: {:.4}", root2);
+}

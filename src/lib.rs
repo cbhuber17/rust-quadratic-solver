@@ -20,35 +20,11 @@ pub mod quadratic {
     }
 }
 
-pub mod input {
-    pub fn get_input(var: String) -> f32 {
-        println!("Enter a value for {}: ", var);
-        let mut num_str = String::new();
-        std::io::stdin().read_line(&mut num_str).unwrap();
-
-        // Check number
-        check_number(&num_str)
-    }
-
-    // ------------------------------------------------------------------------------
-
-    pub fn check_number(num_str: &String) -> f32 {
-        match num_str.trim().parse::<f32>() {
-            Ok(number) => number,
-            Err(_) => {
-                println!("Error: {} is not a float. Exiting...", num_str.trim());
-                panic!();
-            }
-        }
-    }
-}
-
 // ----------- UNIT TESTING ---------------------------------
 
 #[cfg(test)]
 mod test {
     // Everything above will be in scope for test
-    use super::input::*;
     use super::quadratic::*;
 
     #[test]
@@ -69,40 +45,5 @@ mod test {
     #[should_panic]
     fn test_invalid_quadratic() {
         assert_eq!(solve_quadratic(0.0, -1.0, -6.0), (f32::INFINITY, f32::NAN));
-    }
-
-    #[test]
-    fn test_number() {
-        assert_eq!(check_number(&"5".to_string()), 5.0);
-        assert_eq!(check_number(&"5.".to_string()), 5.0);
-        assert_eq!(check_number(&"5.0".to_string()), 5.0);
-        assert_eq!(check_number(&"5.1".to_string()), 5.1);
-        assert_eq!(check_number(&"-1".to_string()), -1.0);
-        assert_eq!(check_number(&"-1.".to_string()), -1.0);
-        assert_eq!(check_number(&"-1.9".to_string()), -1.9);
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_invalid_number1() {
-        assert_eq!(check_number(&"a".to_string()), 0.0);
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_invalid_number2() {
-        assert_eq!(check_number(&" ".to_string()), 0.0);
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_invalid_number3() {
-        assert_eq!(check_number(&"@".to_string()), 0.0);
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_invalid_number4() {
-        assert_eq!(check_number(&"🙂".to_string()), 0.0);
     }
 }
