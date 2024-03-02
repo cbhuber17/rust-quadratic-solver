@@ -1,8 +1,8 @@
 // TODO: Argparse a, b, c
 
-mod utils;
-use utils::input::get_input;
-use utils::quadratic::solve_quadratic;
+// mod utils;
+use rust_quadratic_solver::input::get_input;
+use rust_quadratic_solver::quadratic::solve_quadratic;
 
 fn main() {
     let a: f32 = get_input("a".to_string());
