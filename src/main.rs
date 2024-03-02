@@ -4,7 +4,8 @@ use structopt::StructOpt;
 // ------------------------------------------------------------------------------
 
 #[derive(Debug, StructOpt)]
-#[structopt(about = "Quadratic Equation Solver")]
+#[structopt(about = "Quadratic Equation Solver ax^2 + bx + c")]
+#[structopt(author = "Created by Colin Huber")]
 #[structopt(global_setting = structopt::clap::AppSettings::AllowNegativeNumbers)]
 struct Opt {
     #[structopt(short = "a", required = true)]
