@@ -31,6 +31,8 @@ fn main() {
         }
         QuadraticRoots::NotReal((root1, root2)) => {
             println!("Complex Quadratic Roots:");
+            println!("Root1: {:.4} +{:.4}i", root1.re, root1.im);
+            println!("Root2: {:.4} {:.4}i", root2.re, root2.im);
         }
     };
 
