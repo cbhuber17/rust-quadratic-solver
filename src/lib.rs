@@ -23,6 +23,84 @@ pub mod quadratic {
     }
 }
 
+// ------------------------------------------------------------------------------
+
+pub mod utils {
+    use std::fs::File;
+    use std::io::prelude::*;
+    use std::path::Path;
+
+    use crate::quadratic::QuadraticRoots;
+
+    pub fn create_file(filename: &Path) -> File {
+        match filename.extension() {
+            Some(ext) => {
+                if ext != "csv" {
+                    panic!("\nERROR: File extension must be .csv")
+                }
+            }
+            _ => {
+                panic!("\nERROR: File extension must be .csv")
+            }
+        }
+
+        match File::create(&filename) {
+            Ok(file) => file,
+            Err(err) => panic!(
+                "ERROR: Could not create file: {} due to: {}",
+                filename.display(),
+                err
+            ),
+        }
+    }
+
+    pub fn print_results(root_type: QuadraticRoots) {
+        match root_type {
+            QuadraticRoots::Real((root1, root2)) => {
+                println!(
+                    "Real Quadratic Roots:\nRoot1: {:.4}\nRoot2: {:.4}",
+                    root1, root2
+                )
+            }
+            QuadraticRoots::NotReal((root1, root2)) => {
+                println!(
+                    "Complex Quadratic Roots:\nRoot1: {:.4} +{:.4}i\nRoot2: {:.4} {:.4}i",
+                    root1.re, root1.im, root2.re, root2.im
+                )
+            }
+        }
+    }
+
+    pub fn write_results_to_file(root_type: QuadraticRoots, mut output_file: &File, path: &Path) {
+        match root_type {
+            QuadraticRoots::Real((root1, root2)) => {
+                match output_file.write_all(format!("v1,r,{:.4},{:.4}", root1, root2).as_bytes()) {
+                    Ok(_) => print_success_message(path),
+                    Err(err) => print_error_message(path, err),
+                }
+            }
+            QuadraticRoots::NotReal((root1, root2)) => {
+                match output_file.write_all(format!("v1,c,{:.4},{:.4}", root1, root2).as_bytes()) {
+                    Ok(_) => print_success_message(path),
+                    Err(err) => print_error_message(path, err),
+                }
+            }
+        }
+    }
+
+    fn print_success_message(path: &Path) {
+        println!("\n\nSuccessfully wrote results to: {}", path.display());
+    }
+
+    fn print_error_message(path: &Path, err: std::io::Error) {
+        println!(
+            "ERROR: Could not write to file: {} due to: {}",
+            path.display(),
+            err
+        );
+    }
+}
+
 // ----------- UNIT TESTING ---------------------------------
 
 #[cfg(test)]

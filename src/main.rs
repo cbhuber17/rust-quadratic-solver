@@ -1,15 +1,17 @@
 use rust_quadratic_solver::quadratic::{solve_quadratic, QuadraticRoots};
+use rust_quadratic_solver::utils::{create_file, print_results, write_results_to_file};
+use std::path::Path;
+use std::path::PathBuf;
 use structopt::StructOpt;
 
-use std::fs::File;
-use std::io::Write;
-use std::path::Path;
+// TODO: Documentation
 
 // ------------------------------------------------------------------------------
 
-// TODO: Add CLI example
 #[derive(Debug, StructOpt)]
-#[structopt(about = "Quadratic Equation Solver ax^2 + bx + c")]
+#[structopt(
+    long_about = "Quadratic Equation Solver ax^2 + bx + c\nExample: rust-quadratic-solver.exe -- -a 1 -b -2 -c -3 -f output.csv"
+)]
 #[structopt(author = "Created by Colin Huber")]
 #[structopt(global_setting = structopt::clap::AppSettings::AllowNegativeNumbers)]
 struct Opt {
@@ -21,60 +23,33 @@ struct Opt {
 
     #[structopt(short = "c", required = true)]
     c: f32,
-    // TODO: Add output csv file
+
+    /// Output file
+    #[structopt(short = "f", long = "file", required = true)]
+    f: PathBuf,
 }
 
 // ------------------------------------------------------------------------------
 
 fn main() {
     let opt = Opt::from_args();
+    if opt.a == 0.0 {
+        panic!("ERROR: Parameter 'a' cannot be zero.");
+    }
+    let path = Path::new(&opt.f);
 
-    let path = Path::new("results.txt");
-
-    let mut file = match File::create(&path) {
-        Ok(file) => file,
-        Err(err) => panic!(
-            "ERROR: Could not create file: {} due to: {}",
-            path.display(),
-            err
-        ),
-    };
+    let output_file = create_file(path);
 
     match solve_quadratic(opt.a, opt.b, opt.c) {
         QuadraticRoots::Real((root1, root2)) => {
-            let results: String = format!(
-                "Real Quadratic Roots:\nRoot1: {:.4}\nRoot2: {:.4}",
-                root1, root2
-            );
+            print_results(QuadraticRoots::Real((root1, root2)));
 
-            println!("{}", results);
-
-            // TODO: Write csv format "v1,r,r1,r2"
-            match file.write_all(results.as_bytes()) {
-                Ok(_) => println!("\n\nSuccessfully wrote results to: {}", path.display()),
-                Err(err) => println!(
-                    "ERROR: Could not write to file: {} due to: {}",
-                    path.display(),
-                    err
-                ),
-            }
+            write_results_to_file(QuadraticRoots::Real((root1, root2)), &output_file, path)
         }
         QuadraticRoots::NotReal((root1, root2)) => {
-            let results: String = format!(
-                "Complex Quadratic Roots:\nRoot1: {:.4} +{:.4}i\nRoot2: {:.4} {:.4}i",
-                root1.re, root1.im, root2.re, root2.im
-            );
+            print_results(QuadraticRoots::NotReal((root1, root2)));
 
-            println!("{}", results);
-
-            match file.write_all(results.as_bytes()) {
-                Ok(_) => println!("\n\nSuccessfully wrote results to: {}", path.display()),
-                Err(err) => println!(
-                    "ERROR: Could not write to file: {} due to: {}",
-                    path.display(),
-                    err
-                ),
-            }
+            write_results_to_file(QuadraticRoots::NotReal((root1, root2)), &output_file, path)
         }
     };
 }
