@@ -1,4 +1,4 @@
-use rust_quadratic_solver::quadratic::solve_quadratic;
+use rust_quadratic_solver::quadratic::{solve_quadratic, QuadraticRoots};
 use structopt::StructOpt;
 
 // ------------------------------------------------------------------------------
@@ -23,9 +23,16 @@ struct Opt {
 fn main() {
     let opt = Opt::from_args();
 
-    let (root1, root2) = solve_quadratic(opt.a, opt.b, opt.c);
+    match solve_quadratic(opt.a, opt.b, opt.c) {
+        QuadraticRoots::Real((root1, root2)) => {
+            println!("Real Quadratic Roots:");
+            println!("Root1: {:.4}", root1);
+            println!("Root2: {:.4}", root2);
+        }
+        QuadraticRoots::NotReal((root1, root2)) => {
+            println!("Complex Quadratic Roots:");
+        }
+    };
 
     // TODO: Print results to a file
-    println!("Root1: {:.4}", root1);
-    println!("Root2: {:.4}", root2);
 }
