@@ -13,4 +13,5 @@ name = "quadratic_bench"
 harness = false          # Disable built in harness; let criterion do the work
 
 [dependencies]
+num = "0.4.1"
 structopt = "=0.3.26"
