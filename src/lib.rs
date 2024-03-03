@@ -1,5 +1,3 @@
-// TODO: Use complex solutions for non-real roots
-
 pub mod quadratic {
     use num::complex::Complex;
 
@@ -14,8 +12,8 @@ pub mod quadratic {
         let d = b * b - 4.0 * a * c;
 
         if d < 0.0 {
-            let root1 = Complex::new(-1.0 * b / (2.0 * a), (-1.0 * d).sqrt());
-            let root2 = Complex::new(-1.0 * b / (2.0 * a), -1.0 * (-1.0 * d).sqrt());
+            let root1 = Complex::new(-1.0 * b / (2.0 * a), (-1.0 * d).sqrt() / (2.0 * a));
+            let root2 = Complex::new(-1.0 * b / (2.0 * a), -1.0 * (-1.0 * d).sqrt() / (2.0 * a));
             QuadraticRoots::NotReal((root1, root2))
         } else {
             let root1 = (-1.0 * b + d.sqrt()) / (2.0 * a);
@@ -29,11 +27,13 @@ pub mod quadratic {
 
 #[cfg(test)]
 mod test {
+    use num::Complex;
+
     // Everything above will be in scope for test
     use super::quadratic::*;
 
     #[test]
-    fn test_valid_quadratic() {
+    fn test_real_quadratic() {
         assert_eq!(
             solve_quadratic(1.0, -7.0, 10.0),
             QuadraticRoots::Real((5.0, 2.0))
@@ -58,5 +58,14 @@ mod test {
         );
     }
 
-    // TODO: Test complex results
+    #[test]
+    fn test_complex_quadratic() {
+        assert_eq!(
+            solve_quadratic(1.0, 1.0, 1.0),
+            QuadraticRoots::NotReal((
+                Complex::new(-0.5, f32::sqrt(3.0) / 2.0),
+                Complex::new(-0.5, -1.0 * f32::sqrt(3.0) / 2.0)
+            ))
+        );
+    }
 }
