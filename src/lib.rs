@@ -1,12 +1,40 @@
+/// Module containing functionality to solve quadratic equations,
+/// whether they have real or complex roots.
 pub mod quadratic {
     use num::complex::Complex;
 
+    /// Represents the roots of a quadratic equation.
     #[derive(Debug, PartialEq)]
     pub enum QuadraticRoots {
         Real((f32, f32)),
         NotReal((Complex<f32>, Complex<f32>)),
     }
 
+    /// Solves a quadratic equation and returns its roots.
+    ///
+    /// # Arguments
+    ///
+    /// * `a` - The coefficient of the quadratic term.
+    /// * `b` - The coefficient of the linear term.
+    /// * `c` - The constant term.
+    ///
+    /// # Returns
+    ///
+    /// * If the roots are real, returns `QuadraticRoots::Real((root1, root2))`.
+    /// * If the roots are complex, returns `QuadraticRoots::NotReal((root1, root2))`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rust_quadratic_solver::quadratic::{QuadraticRoots, solve_quadratic};
+    /// use num::complex::Complex;
+    ///
+    /// let roots = solve_quadratic(1.0, 0.0, -1.0);
+    /// assert_eq!(roots, QuadraticRoots::Real((1.0, -1.0)));
+    ///
+    /// let roots = solve_quadratic(1.0, 0.0, 1.0);
+    /// assert_eq!(roots, QuadraticRoots::NotReal((Complex::new(0.0, 1.0), Complex::new(0.0, -1.0))));
+    /// ```
     pub fn solve_quadratic(a: f32, b: f32, c: f32) -> QuadraticRoots {
         // Discriminant
         let d = b * b - 4.0 * a * c;
@@ -25,6 +53,9 @@ pub mod quadratic {
 
 // ------------------------------------------------------------------------------
 
+/// A utility module to support I/O operations of the program.
+/// Contains functions to create an output file, print the roots to the
+/// console and file, and any success/error messages.
 pub mod utils {
     use std::fs::File;
     use std::io::prelude::*;
@@ -32,6 +63,29 @@ pub mod utils {
 
     use crate::quadratic::QuadraticRoots;
 
+    /// Creates a new CSV file with the specified filename.
+    ///
+    /// # Arguments
+    ///
+    /// * `filename` - A reference to the path where the new file should be created.
+    ///
+    /// # Returns
+    ///
+    /// Returns a `File` object representing the newly created CSV file.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the file extension is not `.csv` or if there was an error creating the file.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rust_quadratic_solver::utils::create_file;
+    /// use std::path::Path;
+    ///
+    /// let filename = Path::new("example.csv");
+    /// let file = create_file(&filename);
+    /// ```
     pub fn create_file(filename: &Path) -> File {
         match filename.extension() {
             Some(ext) => {
@@ -54,6 +108,25 @@ pub mod utils {
         }
     }
 
+    /// Prints the roots of a quadratic equation to the console.
+    ///
+    /// # Arguments
+    ///
+    /// * `root_type` - The type of roots to print, either `QuadraticRoots::Real` or `QuadraticRoots::NotReal`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rust_quadratic_solver::utils::print_results;
+    /// use rust_quadratic_solver::quadratic::QuadraticRoots;
+    /// use num::complex::Complex;
+    ///
+    /// let roots_real = QuadraticRoots::Real((1.0, -1.0));
+    /// let roots_complex = QuadraticRoots::NotReal((Complex::new(0.0, 1.0), Complex::new(0.0, -1.0)));
+    ///
+    /// print_results(roots_real);
+    /// print_results(roots_complex);
+    /// ```
     pub fn print_results(root_type: QuadraticRoots) {
         match root_type {
             QuadraticRoots::Real((root1, root2)) => {
@@ -71,6 +144,28 @@ pub mod utils {
         }
     }
 
+    /// Writes the roots of a quadratic equation to a file.
+    ///
+    /// # Arguments
+    ///
+    /// * `root_type` - The type of roots to write, either `QuadraticRoots::Real` or `QuadraticRoots::NotReal`.
+    /// * `output_file` - A mutable reference to the file where the roots should be written.
+    /// * `path` - The path to the file where the roots should be written.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rust_quadratic_solver::utils::write_results_to_file;
+    /// use rust_quadratic_solver::quadratic::QuadraticRoots;
+    /// use std::fs::File;
+    /// use std::path::Path;
+    ///
+    /// let roots_real = QuadraticRoots::Real((1.0, -1.0));
+    /// let mut file = File::create("output.txt").unwrap();
+    /// let path = Path::new("output.txt");
+    ///
+    /// write_results_to_file(roots_real, &mut file, &path);
+    /// ```
     pub fn write_results_to_file(root_type: QuadraticRoots, mut output_file: &File, path: &Path) {
         match root_type {
             QuadraticRoots::Real((root1, root2)) => {
@@ -88,10 +183,21 @@ pub mod utils {
         }
     }
 
+    /// Prints a success message indicating that the results were written to a file.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - The path to the file where the results were written.
     fn print_success_message(path: &Path) {
         println!("\n\nSuccessfully wrote results to: {}", path.display());
     }
 
+    /// Prints an error message indicating that there was an error writing to a file.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - The path to the file where the error occurred.
+    /// * `err` - The error that occurred while writing to the file.
     fn print_error_message(path: &Path, err: std::io::Error) {
         println!(
             "ERROR: Could not write to file: {} due to: {}",

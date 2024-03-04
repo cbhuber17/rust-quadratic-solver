@@ -4,10 +4,9 @@ use std::path::Path;
 use std::path::PathBuf;
 use structopt::StructOpt;
 
-// TODO: Documentation
-
 // ------------------------------------------------------------------------------
 
+/// Input parameters for the program.
 #[derive(Debug, StructOpt)]
 #[structopt(
     long_about = "Quadratic Equation Solver ax^2 + bx + c\nExample: rust-quadratic-solver.exe -- -a 1 -b -2 -c -3 -f output.csv"
@@ -31,6 +30,7 @@ struct Opt {
 
 // ------------------------------------------------------------------------------
 
+/// Main entry point to the program.
 fn main() {
     let opt = Opt::from_args();
     if opt.a == 0.0 {
