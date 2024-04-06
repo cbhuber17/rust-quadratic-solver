@@ -60,6 +60,7 @@ pub mod utils {
     use std::fs::File;
     use std::io::prelude::*;
     use std::path::Path;
+    use colored::Colorize;
 
     use crate::quadratic::QuadraticRoots;
 
@@ -90,18 +91,19 @@ pub mod utils {
         match filename.extension() {
             Some(ext) => {
                 if ext != "csv" {
-                    panic!("\nERROR: File extension must be .csv")
+                    panic!("\n{} File extension must be .csv", "ERROR:".red())
                 }
             }
             _ => {
-                panic!("\nERROR: File extension must be .csv")
+                panic!("\n{} File extension must be .csv", "ERROR:".red())
             }
         }
 
         match File::create(&filename) {
             Ok(file) => file,
             Err(err) => panic!(
-                "ERROR: Could not create file: {} due to: {}",
+                "{} Could not create file: {} due to: {}",
+                "ERROR:".red(),
                 filename.display(),
                 err
             ),
@@ -131,14 +133,18 @@ pub mod utils {
         match root_type {
             QuadraticRoots::Real((root1, root2)) => {
                 println!(
-                    "Real Quadratic Roots:\nRoot1: {:.4}\nRoot2: {:.4}",
-                    root1, root2
+                    "{}\nRoot1: {}\nRoot2: {}", "\nReal Quadratic Roots:".green(),
+                    format!("{:.4}", root1).yellow(), format!("{:.4}", root2).yellow()
                 )
             }
             QuadraticRoots::NotReal((root1, root2)) => {
                 println!(
-                    "Complex Quadratic Roots:\nRoot1: {:.4} +{:.4}i\nRoot2: {:.4} {:.4}i",
-                    root1.re, root1.im, root2.re, root2.im
+                    "{}\nRoot1: {} {}\nRoot2: {} {}",
+                     "\nComplex Quadratic Roots:".green(),
+                    format!("{:.4}", root1.re).yellow(),
+                    format!("+{:.4}i", root1.im).cyan(),
+                    format!("{:.4}", root2.re).yellow(),
+                    format!("{:.4}i", root2.im).cyan()
                 )
             }
         }
@@ -189,7 +195,7 @@ pub mod utils {
     ///
     /// * `path` - The path to the file where the results were written.
     fn print_success_message(path: &Path) {
-        println!("\n\nSuccessfully wrote results to: {}", path.display());
+        println!("\n\nSuccessfully wrote results to: {}", format!("{}", path.display()).green());
     }
 
     /// Prints an error message indicating that there was an error writing to a file.
@@ -200,7 +206,8 @@ pub mod utils {
     /// * `err` - The error that occurred while writing to the file.
     fn print_error_message(path: &Path, err: std::io::Error) {
         println!(
-            "ERROR: Could not write to file: {} due to: {}",
+            "{} Could not write to file: {} due to: {}",
+            "ERROR:".red(),
             path.display(),
             err
         );

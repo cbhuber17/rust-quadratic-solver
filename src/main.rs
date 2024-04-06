@@ -3,6 +3,7 @@ use rust_quadratic_solver::utils::{create_file, print_results, write_results_to_
 use std::path::Path;
 use std::path::PathBuf;
 use structopt::StructOpt;
+use colored::Colorize;
 
 // ------------------------------------------------------------------------------
 
@@ -34,7 +35,7 @@ struct Opt {
 fn main() {
     let opt = Opt::from_args();
     if opt.a == 0.0 {
-        panic!("ERROR: Parameter 'a' cannot be zero.");
+        panic!("{} Parameter 'a' cannot be zero.", "ERROR:".red());
     }
     let path = Path::new(&opt.f);
 
