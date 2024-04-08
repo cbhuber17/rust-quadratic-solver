@@ -1,6 +1,6 @@
 # Rust Quadratic Solver
 
-![jira-gif](./jira-cli.gif)
+![quad-solver](./qual-solver.gif)
 
 ## Usage
 
