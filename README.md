@@ -1,6 +1,6 @@
 # Rust Quadratic Solver
 
-![quad-solver](./qual-solver.gif)
+![quad-solver](./quad-solver.gif)
 
 ## Usage
 
